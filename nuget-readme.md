@@ -47,8 +47,9 @@ Follow [Semantic Versioning](https://semver.org/) guidelines:
 
 1. **Set your API key** (only needed once per machine):
    ```bash
-   dotnet nuget push --help
+   dotnet nuget setapikey YOUR_API_KEY --source https://api.nuget.org/v3/index.json
    ```
+   Replace `YOUR_API_KEY` with your actual NuGet API key.
 
 2. **Push the package**:
    ```bash
@@ -116,4 +117,4 @@ Review the error messages carefully. Common issues include:
 - Invalid package ID format
 - License information issues
 
-For more information, visit the [official NuGet documentation](https://docs.microsoft.com/en-us/nuget/).
+For more information, visit the [official NuGet documentation](https://learn.microsoft.com/en-us/nuget/).
