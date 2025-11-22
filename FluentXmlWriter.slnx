@@ -1,0 +1,4 @@
+<Solution>
+  <Project Path="FluentXmlWriterCore/FluentXmlWriterCore.csproj" />
+  <Project Path="FluentXmlWriterTests/FluentXmlWriterTests.csproj" />
+</Solution>
