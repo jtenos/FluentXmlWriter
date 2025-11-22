@@ -6,6 +6,19 @@
 		<Nullable>enable</Nullable>
 		<WarningsAsErrors />
 		<TreatWarningsAsErrors>True</TreatWarningsAsErrors>
+
+		<!-- NuGet Package Properties -->
+		<PackageId>FluentXmlWriter</PackageId>
+		<Version>1.0.0</Version>
+		<Authors>jtenos</Authors>
+		<Company>jtenos</Company>
+		<Description>A fluent API for writing XML documents in .NET</Description>
+		<PackageLicenseExpression>CC0-1.0</PackageLicenseExpression>
+		<PackageProjectUrl>https://github.com/jtenos/FluentXmlWriter</PackageProjectUrl>
+		<RepositoryUrl>https://github.com/jtenos/FluentXmlWriter</RepositoryUrl>
+		<RepositoryType>git</RepositoryType>
+		<PackageTags>xml;fluent;writer;xml-writer</PackageTags>
+		<GeneratePackageOnBuild>false</GeneratePackageOnBuild>
 	</PropertyGroup>
 
 </Project>
