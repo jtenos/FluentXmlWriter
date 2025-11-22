@@ -21,30 +21,49 @@ public struct FormattingOptions
 
 	public FormattingOptions WithNewLine(string newLine)
 	{
-		NewLine = newLine;
-		Indent = true;
-		return this;
+		return new FormattingOptions
+		{
+			NewLine = newLine,
+			IndentChar = this.IndentChar,
+			Indentation = this.Indentation,
+			Indent = true,
+			NewLineOnAttributes = this.NewLineOnAttributes
+		};
 	}
 
 	public FormattingOptions WithTabs(int indentation = 1)
 	{
-		IndentChar = '\t';
-		Indentation = indentation;
-		Indent = true;
-		return this;
+		return new FormattingOptions
+		{
+			IndentChar = '\t',
+			Indentation = indentation,
+			Indent = true,
+			NewLine = this.NewLine,
+			NewLineOnAttributes = this.NewLineOnAttributes
+		};
 	}
 
 	public FormattingOptions WithSpaces(int indentation = 4)
 	{
-		IndentChar = ' ';
-		Indentation = indentation;
-		Indent = true;
-		return this;
+		return new FormattingOptions
+		{
+			IndentChar = ' ',
+			Indentation = indentation,
+			Indent = true,
+			NewLine = this.NewLine,
+			NewLineOnAttributes = this.NewLineOnAttributes
+		};
 	}
 
 	public FormattingOptions WithAttributesOnNewLine(bool newLineOnAttributes)
 	{
-		NewLineOnAttributes = newLineOnAttributes;
-		return this;
+		return new FormattingOptions
+		{
+			NewLineOnAttributes = newLineOnAttributes,
+			IndentChar = this.IndentChar,
+			Indentation = this.Indentation,
+			Indent = this.Indent,
+			NewLine = this.NewLine
+		};
 	}
 }

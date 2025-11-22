@@ -57,10 +57,18 @@ public partial class FluentXmlWriter
 		doc.LoadXml(xml);
 		
 		var sb = new StringBuilder();
+		
+		// Ensure we have valid indent character when indentation is needed
+		var indentChar = options.IndentChar;
+		if (indentChar == '\0' && options.Indentation > 0)
+		{
+			indentChar = '\t'; // Default to tab if null character with indentation
+		}
+		
 		var settings = new System.Xml.XmlWriterSettings
 		{
 			Indent = options.Indent,
-			IndentChars = new string(options.IndentChar, options.Indentation),
+			IndentChars = new string(indentChar, options.Indentation),
 			NewLineChars = options.NewLine,
 			NewLineOnAttributes = options.NewLineOnAttributes,
 			OmitXmlDeclaration = true
