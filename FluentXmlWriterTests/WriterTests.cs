@@ -10,7 +10,7 @@ public class WriterTests
 	{
 			string xml = null!;
 
-			FluentXmlWriter.Start("top")
+			FluentXmlWriter.Start("top", indented: true)
 				.ManySimple(
 					SimpleElement.Create("a").Attr("at1", "val1").Attr("at2", "val2")
 					, SimpleElement.Create("b")
@@ -33,7 +33,7 @@ public class WriterTests
 	{
 		string xml = null!;
 
-		FluentXmlWriter.Start("configuration")
+		FluentXmlWriter.Start("configuration", indented: true)
 			.Complex("appSettings")
 				.ManySimple(
 					SimpleElement.Create("add").Attr("key", "DatabaseConnection").Attr("value", "Server=localhost;Database=mydb"),
@@ -70,7 +70,7 @@ public class WriterTests
 	{
 		string xml = null!;
 
-		FluentXmlWriter.Start("response")
+		FluentXmlWriter.Start("response", indented: true)
 			.Attr("status", "success")
 			.Complex("metadata")
 				.Complex("totalResults").Text("150").EndElem()
@@ -140,7 +140,7 @@ public class WriterTests
 	{
 		string xml = null!;
 
-		FluentXmlWriter.Start("soap:Envelope")
+		FluentXmlWriter.Start("soap:Envelope", indented: true)
 			.Attr("xmlns:soap", "http://schemas.xmlsoap.org/soap/envelope/")
 			.Attr("xmlns:xsi", "http://www.w3.org/2001/XMLSchema-instance")
 			.Complex("soap:Header")
@@ -176,7 +176,7 @@ public class WriterTests
 	{
 		string xml = null!;
 
-		FluentXmlWriter.Start("rss")
+		FluentXmlWriter.Start("rss", indented: true)
 			.Attr("version", "2.0")
 			.Complex("channel")
 				.Complex("title").Text("Tech Blog").EndElem()
@@ -226,7 +226,7 @@ public class WriterTests
 	{
 		string xml = null!;
 
-		FluentXmlWriter.Start("project")
+		FluentXmlWriter.Start("project", indented: true)
 			.Attr("name", "MyApp")
 			.Attr("version", "1.0")
 			.Complex("dependencies")
@@ -277,7 +277,7 @@ public class WriterTests
 	{
 		string xml = null!;
 
-		FluentXmlWriter.Start("document")
+		FluentXmlWriter.Start("document", indented: true)
 			.Complex("content")
 				.Complex("script").CData("function test() { if (x < y && a > b) { return true; } }").EndElem()
 				.EndElem()
@@ -298,7 +298,7 @@ public class WriterTests
 	{
 		string xml = null!;
 
-		FluentXmlWriter.Start("config")
+		FluentXmlWriter.Start("config", indented: true)
 			.Comment("Database configuration section")
 			.Complex("database")
 				.Complex("host").Text("localhost").EndElem()
@@ -331,7 +331,7 @@ public class WriterTests
 	{
 		string xml = null!;
 
-		FluentXmlWriter.Start("article")
+		FluentXmlWriter.Start("article", indented: true)
 			.Complex("paragraph")
 				.Text("This is the first part of text. ")
 				.Complex("bold")
@@ -354,7 +354,7 @@ public class WriterTests
 	{
 		string xml = null!;
 
-		FluentXmlWriter.Start("svg")
+		FluentXmlWriter.Start("svg", indented: true)
 			.Attr("xmlns", "http://www.w3.org/2000/svg")
 			.Attr("width", "100")
 			.Attr("height", "100")
@@ -387,7 +387,7 @@ public class WriterTests
 	{
 		string xml = null!;
 
-		FluentXmlWriter.Start("project")
+		FluentXmlWriter.Start("project", indented: true)
 			.Attr("xmlns", "http://maven.apache.org/POM/4.0.0")
 			.Complex("modelVersion").Text("4.0.0").EndElem()
 			.Complex("groupId").Text("com.example").EndElem()
@@ -427,7 +427,7 @@ public class WriterTests
 	{
 		string xml = null!;
 
-		FluentXmlWriter.Start("configuration")
+		FluentXmlWriter.Start("configuration", indented: true)
 			.Complex("system.web")
 				.Complex("compilation")
 					.Attr("debug", "true")
@@ -466,7 +466,7 @@ public class WriterTests
 	{
 		string xml = null!;
 
-		FluentXmlWriter.Start("data")
+		FluentXmlWriter.Start("data", indented: true)
 			.Complex("field")
 				.Complex("value").Text("Less than < and greater than > symbols").EndElem()
 				.EndElem()
@@ -493,7 +493,7 @@ public class WriterTests
 	{
 		string xml = null!;
 
-		FluentXmlWriter.Start("document")
+		FluentXmlWriter.Start("document", indented: true)
 			.ManySimple(
 				SimpleElement.Create("emptyTag1"),
 				SimpleElement.Create("emptyTag2"),
@@ -509,5 +509,232 @@ public class WriterTests
 			</document>
 			""";
 		Assert.AreEqual(expected, xml);
+	}
+
+	[TestMethod]
+	public void TestMinifiedOutput_Default()
+	{
+		var xml = FluentXmlWriter.Start("root")
+			.Simple("someElem").Attr("id", "1")
+			.Complex("something")
+				.Simple("else")
+				.EndElem()
+			.OutputToString();
+
+		const string expected = "<root><someElem id=\"1\" /><something><else /></something></root>";
+		Assert.AreEqual(expected, xml);
+	}
+
+	[TestMethod]
+	public void TestMinifiedOutput_ExplicitFalse()
+	{
+		var xml = FluentXmlWriter.Start("root")
+			.Complex("child")
+				.Complex("grandchild").Text("value").EndElem()
+				.EndElem()
+			.OutputToString(indented: false);
+
+		const string expected = "<root><child><grandchild>value</grandchild></child></root>";
+		Assert.AreEqual(expected, xml);
+	}
+
+	[TestMethod]
+	public void TestIndentedOutput_WithBoolParameter()
+	{
+		var xml = FluentXmlWriter.Start("root")
+			.Complex("child")
+				.Complex("grandchild").Text("value").EndElem()
+				.EndElem()
+			.OutputToString(indented: true);
+
+		var expected = "<root>" + Environment.NewLine +
+			"\t<child>" + Environment.NewLine +
+			"\t\t<grandchild>value</grandchild>" + Environment.NewLine +
+			"\t</child>" + Environment.NewLine +
+			"</root>";
+		Assert.AreEqual(expected, xml);
+	}
+
+	[TestMethod]
+	public void TestFormattingOptions_WithSpaces()
+	{
+		var xml = FluentXmlWriter.Start("root")
+			.Complex("child")
+				.Complex("grandchild").Text("value").EndElem()
+				.EndElem()
+			.OutputToString(FormattingOptions.Default
+				.WithSpaces(2)
+				.WithNewLine(Environment.NewLine));
+
+		var expected = "<root>" + Environment.NewLine +
+			"  <child>" + Environment.NewLine +
+			"    <grandchild>value</grandchild>" + Environment.NewLine +
+			"  </child>" + Environment.NewLine +
+			"</root>";
+		Assert.AreEqual(expected, xml);
+	}
+
+	[TestMethod]
+	public void TestFormattingOptions_WithSpaces4()
+	{
+		var xml = FluentXmlWriter.Start("root")
+			.Complex("child")
+				.Text("test")
+				.EndElem()
+			.OutputToString(FormattingOptions.Default
+				.WithSpaces(4)
+				.WithNewLine("\n"));
+
+		const string expected = "<root>\n    <child>test</child>\n</root>";
+		Assert.AreEqual(expected, xml);
+	}
+
+	[TestMethod]
+	public void TestFormattingOptions_WithTabs()
+	{
+		var xml = FluentXmlWriter.Start("root")
+			.Complex("child")
+				.Complex("grandchild").Text("value").EndElem()
+				.EndElem()
+			.OutputToString(FormattingOptions.Default
+				.WithTabs()
+				.WithNewLine("\n"));
+
+		const string expected = "<root>\n\t<child>\n\t\t<grandchild>value</grandchild>\n\t</child>\n</root>";
+		Assert.AreEqual(expected, xml);
+	}
+
+	[TestMethod]
+	public void TestFormattingOptions_WithWindowsLineEndings()
+	{
+		var xml = FluentXmlWriter.Start("root")
+			.Complex("child").Text("value").EndElem()
+			.OutputToString(FormattingOptions.Default
+				.WithTabs()
+				.WithNewLine("\r\n"));
+
+		const string expected = "<root>\r\n\t<child>value</child>\r\n</root>";
+		Assert.AreEqual(expected, xml);
+	}
+
+	[TestMethod]
+	public void TestComplexStructure_Minified()
+	{
+		var xml = FluentXmlWriter.Start("response")
+			.Attr("status", "success")
+			.Complex("data")
+				.Complex("user")
+					.Complex("id").Text("123").EndElem()
+					.Complex("name").Text("John").EndElem()
+					.EndElem()
+				.EndElem()
+			.OutputToString();
+
+		const string expected = "<response status=\"success\"><data><user><id>123</id><name>John</name></user></data></response>";
+		Assert.AreEqual(expected, xml);
+	}
+
+	[TestMethod]
+	public void TestSimpleElements_Minified()
+	{
+		var xml = FluentXmlWriter.Start("root")
+			.ManySimple(
+				SimpleElement.Create("a").Attr("x", "1"),
+				SimpleElement.Create("b").Attr("y", "2"),
+				SimpleElement.Create("c")
+			)
+			.OutputToString();
+
+		const string expected = "<root><a x=\"1\" /><b y=\"2\" /><c /></root>";
+		Assert.AreEqual(expected, xml);
+	}
+
+	[TestMethod]
+	public void TestCData_Minified()
+	{
+		var xml = FluentXmlWriter.Start("root")
+			.Complex("script")
+				.CData("if (x < y) { return true; }")
+				.EndElem()
+			.OutputToString();
+
+		const string expected = "<root><script><![CDATA[if (x < y) { return true; }]]></script></root>";
+		Assert.AreEqual(expected, xml);
+	}
+
+	[TestMethod]
+	public void TestComments_Minified()
+	{
+		var xml = FluentXmlWriter.Start("root")
+			.Comment("This is a comment")
+			.Complex("child").Text("value").EndElem()
+			.OutputToString();
+
+		const string expected = "<root><!--This is a comment--><child>value</child></root>";
+		Assert.AreEqual(expected, xml);
+	}
+
+	[TestMethod]
+	public void TestOutputToFile_WithIndentation()
+	{
+		var tempFile = Path.GetTempFileName();
+		try
+		{
+			FluentXmlWriter.Start("root")
+				.Complex("child").Text("value").EndElem()
+				.OutputToFile(tempFile, indented: true);
+
+			var xml = File.ReadAllText(tempFile);
+			var expected = "<root>" + Environment.NewLine +
+				"\t<child>value</child>" + Environment.NewLine +
+				"</root>";
+			Assert.AreEqual(expected, xml);
+		}
+		finally
+		{
+			File.Delete(tempFile);
+		}
+	}
+
+	[TestMethod]
+	public void TestOutputToFile_WithFormattingOptions()
+	{
+		var tempFile = Path.GetTempFileName();
+		try
+		{
+			FluentXmlWriter.Start("root")
+				.Complex("child").Text("value").EndElem()
+				.OutputToFile(tempFile, FormattingOptions.Default
+					.WithSpaces(4)
+					.WithNewLine("\n"));
+
+			var xml = File.ReadAllText(tempFile);
+			const string expected = "<root>\n    <child>value</child>\n</root>";
+			Assert.AreEqual(expected, xml);
+		}
+		finally
+		{
+			File.Delete(tempFile);
+		}
+	}
+
+	[TestMethod]
+	public void TestOutputToFile_Minified()
+	{
+		var tempFile = Path.GetTempFileName();
+		try
+		{
+			FluentXmlWriter.Start("root")
+				.Complex("child").Text("value").EndElem()
+				.OutputToFile(tempFile);
+
+			var xml = File.ReadAllText(tempFile);
+			const string expected = "<root><child>value</child></root>";
+			Assert.AreEqual(expected, xml);
+		}
+		finally
+		{
+			File.Delete(tempFile);
+		}
 	}
 }
