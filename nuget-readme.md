@@ -49,14 +49,14 @@ Follow [Semantic Versioning](https://semver.org/) guidelines:
    ```bash
    dotnet nuget setapikey YOUR_API_KEY --source https://api.nuget.org/v3/index.json
    ```
-   Replace `YOUR_API_KEY` with your actual NuGet API key.
+   Replace `YOUR_API_KEY` with your actual NuGet API key. The key will be stored securely for future use.
 
 2. **Push the package**:
    ```bash
-   dotnet nuget push ./nupkgs/FluentXmlWriter.{version}.nupkg --api-key YOUR_API_KEY --source https://api.nuget.org/v3/index.json
+   dotnet nuget push ./nupkgs/FluentXmlWriter.{version}.nupkg --source https://api.nuget.org/v3/index.json
    ```
 
-   Replace `YOUR_API_KEY` with your actual NuGet API key and `{version}` with the actual version number.
+   Replace `{version}` with the actual version number. The API key set in step 1 will be used automatically.
 
 ### Option 2: Using NuGet.org Web Interface
 
