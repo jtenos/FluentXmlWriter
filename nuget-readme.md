@@ -55,10 +55,12 @@ Follow [Semantic Versioning](https://semver.org/) guidelines:
 
 2. **Push the package**:
    ```bash
-   dotnet nuget push ./nupkgs/FluentXmlWriter.*.nupkg --source https://api.nuget.org/v3/index.json
+   dotnet nuget push ./nupkgs/FluentXmlWriter.1.0.0.nupkg --source https://api.nuget.org/v3/index.json
    ```
 
-   The wildcard pattern `*.nupkg` will match the package file. Alternatively, specify the exact version (e.g., `FluentXmlWriter.1.0.0.nupkg`). The API key set in step 1 will be used automatically.
+   Replace `1.0.0` with your actual version number. The API key set in step 1 will be used automatically.
+   
+   **Tip**: You can also use a wildcard pattern like `FluentXmlWriter.*.nupkg` if you have only one package file in the directory.
 
 ### Option 2: Using NuGet.org Web Interface
 
