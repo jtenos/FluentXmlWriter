@@ -50,13 +50,15 @@ Follow [Semantic Versioning](https://semver.org/) guidelines:
    dotnet nuget setapikey YOUR_API_KEY --source https://api.nuget.org/v3/index.json
    ```
    Replace `YOUR_API_KEY` with your actual NuGet API key. The key will be stored securely for future use.
+   
+   **Security Note**: Never commit API keys to source control. The key is stored in your local NuGet configuration.
 
 2. **Push the package**:
    ```bash
-   dotnet nuget push ./nupkgs/FluentXmlWriter.{version}.nupkg --source https://api.nuget.org/v3/index.json
+   dotnet nuget push ./nupkgs/FluentXmlWriter.*.nupkg --source https://api.nuget.org/v3/index.json
    ```
 
-   Replace `{version}` with the actual version number. The API key set in step 1 will be used automatically.
+   The wildcard pattern `*.nupkg` will match the package file. Alternatively, specify the exact version (e.g., `FluentXmlWriter.1.0.0.nupkg`). The API key set in step 1 will be used automatically.
 
 ### Option 2: Using NuGet.org Web Interface
 

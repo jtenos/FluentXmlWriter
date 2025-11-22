@@ -13,7 +13,7 @@
 		<Authors>jtenos</Authors>
 		<Company>jtenos</Company>
 		<Description>A fluent API for writing XML documents in .NET</Description>
-		<Copyright>CC0 1.0 Universal</Copyright>
+		<Copyright>Public Domain</Copyright>
 		<PackageLicenseExpression>CC0-1.0</PackageLicenseExpression>
 		<PackageProjectUrl>https://github.com/jtenos/FluentXmlWriter</PackageProjectUrl>
 		<RepositoryUrl>https://github.com/jtenos/FluentXmlWriter</RepositoryUrl>
