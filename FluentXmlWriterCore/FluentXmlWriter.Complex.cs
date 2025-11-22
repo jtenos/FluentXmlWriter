@@ -74,9 +74,56 @@ partial class FluentXmlWriter
 		action(_stringBuilder.ToString());
 	}
 
+	string IFluentXmlWriterComplex.OutputToString()
+	{
+		_xmlWriter.WriteEndElement(); // Top-level element
+		return _stringBuilder.ToString();
+	}
+
+	string IFluentXmlWriterComplex.OutputToString(bool indented)
+	{
+		_xmlWriter.WriteEndElement(); // Top-level element
+		var xml = _stringBuilder.ToString();
+		
+		if (!indented)
+		{
+			return xml;
+		}
+		
+		var options = FormattingOptions.Default
+			.WithTabs()
+			.WithNewLine(Environment.NewLine);
+		return ReformatXml(xml, options);
+	}
+
+	string IFluentXmlWriterComplex.OutputToString(FormattingOptions options)
+	{
+		_xmlWriter.WriteEndElement(); // Top-level element
+		var xml = _stringBuilder.ToString();
+		
+		if (!options.Indent)
+		{
+			return xml;
+		}
+		
+		return ReformatXml(xml, options);
+	}
+
 	void IFluentXmlWriterComplex.OutputToFile(string fileName)
 	{
 		_xmlWriter.WriteEndElement(); // Top-level element
 		File.WriteAllText(fileName, _stringBuilder.ToString());
+	}
+
+	void IFluentXmlWriterComplex.OutputToFile(string fileName, bool indented)
+	{
+		var output = ((IFluentXmlWriterComplex)this).OutputToString(indented);
+		File.WriteAllText(fileName, output);
+	}
+
+	void IFluentXmlWriterComplex.OutputToFile(string fileName, FormattingOptions options)
+	{
+		var output = ((IFluentXmlWriterComplex)this).OutputToString(options);
+		File.WriteAllText(fileName, output);
 	}
 }

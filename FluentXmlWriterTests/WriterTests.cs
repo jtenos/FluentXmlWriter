@@ -10,7 +10,7 @@ public class WriterTests
 	{
 			string xml = null!;
 
-			FluentXmlWriter.Start("top")
+			FluentXmlWriter.Start("top", indented: true)
 				.ManySimple(
 					SimpleElement.Create("a").Attr("at1", "val1").Attr("at2", "val2")
 					, SimpleElement.Create("b")
@@ -33,7 +33,7 @@ public class WriterTests
 	{
 		string xml = null!;
 
-		FluentXmlWriter.Start("configuration")
+		FluentXmlWriter.Start("configuration", indented: true)
 			.Complex("appSettings")
 				.ManySimple(
 					SimpleElement.Create("add").Attr("key", "DatabaseConnection").Attr("value", "Server=localhost;Database=mydb"),
@@ -70,7 +70,7 @@ public class WriterTests
 	{
 		string xml = null!;
 
-		FluentXmlWriter.Start("response")
+		FluentXmlWriter.Start("response", indented: true)
 			.Attr("status", "success")
 			.Complex("metadata")
 				.Complex("totalResults").Text("150").EndElem()
@@ -140,7 +140,7 @@ public class WriterTests
 	{
 		string xml = null!;
 
-		FluentXmlWriter.Start("soap:Envelope")
+		FluentXmlWriter.Start("soap:Envelope", indented: true)
 			.Attr("xmlns:soap", "http://schemas.xmlsoap.org/soap/envelope/")
 			.Attr("xmlns:xsi", "http://www.w3.org/2001/XMLSchema-instance")
 			.Complex("soap:Header")
@@ -176,7 +176,7 @@ public class WriterTests
 	{
 		string xml = null!;
 
-		FluentXmlWriter.Start("rss")
+		FluentXmlWriter.Start("rss", indented: true)
 			.Attr("version", "2.0")
 			.Complex("channel")
 				.Complex("title").Text("Tech Blog").EndElem()
@@ -226,7 +226,7 @@ public class WriterTests
 	{
 		string xml = null!;
 
-		FluentXmlWriter.Start("project")
+		FluentXmlWriter.Start("project", indented: true)
 			.Attr("name", "MyApp")
 			.Attr("version", "1.0")
 			.Complex("dependencies")
@@ -277,7 +277,7 @@ public class WriterTests
 	{
 		string xml = null!;
 
-		FluentXmlWriter.Start("document")
+		FluentXmlWriter.Start("document", indented: true)
 			.Complex("content")
 				.Complex("script").CData("function test() { if (x < y && a > b) { return true; } }").EndElem()
 				.EndElem()
@@ -298,7 +298,7 @@ public class WriterTests
 	{
 		string xml = null!;
 
-		FluentXmlWriter.Start("config")
+		FluentXmlWriter.Start("config", indented: true)
 			.Comment("Database configuration section")
 			.Complex("database")
 				.Complex("host").Text("localhost").EndElem()
@@ -331,7 +331,7 @@ public class WriterTests
 	{
 		string xml = null!;
 
-		FluentXmlWriter.Start("article")
+		FluentXmlWriter.Start("article", indented: true)
 			.Complex("paragraph")
 				.Text("This is the first part of text. ")
 				.Complex("bold")
@@ -354,7 +354,7 @@ public class WriterTests
 	{
 		string xml = null!;
 
-		FluentXmlWriter.Start("svg")
+		FluentXmlWriter.Start("svg", indented: true)
 			.Attr("xmlns", "http://www.w3.org/2000/svg")
 			.Attr("width", "100")
 			.Attr("height", "100")
@@ -387,7 +387,7 @@ public class WriterTests
 	{
 		string xml = null!;
 
-		FluentXmlWriter.Start("project")
+		FluentXmlWriter.Start("project", indented: true)
 			.Attr("xmlns", "http://maven.apache.org/POM/4.0.0")
 			.Complex("modelVersion").Text("4.0.0").EndElem()
 			.Complex("groupId").Text("com.example").EndElem()
@@ -427,7 +427,7 @@ public class WriterTests
 	{
 		string xml = null!;
 
-		FluentXmlWriter.Start("configuration")
+		FluentXmlWriter.Start("configuration", indented: true)
 			.Complex("system.web")
 				.Complex("compilation")
 					.Attr("debug", "true")
@@ -466,7 +466,7 @@ public class WriterTests
 	{
 		string xml = null!;
 
-		FluentXmlWriter.Start("data")
+		FluentXmlWriter.Start("data", indented: true)
 			.Complex("field")
 				.Complex("value").Text("Less than < and greater than > symbols").EndElem()
 				.EndElem()
@@ -493,7 +493,7 @@ public class WriterTests
 	{
 		string xml = null!;
 
-		FluentXmlWriter.Start("document")
+		FluentXmlWriter.Start("document", indented: true)
 			.ManySimple(
 				SimpleElement.Create("emptyTag1"),
 				SimpleElement.Create("emptyTag2"),
