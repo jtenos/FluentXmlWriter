@@ -11,7 +11,7 @@ This document provides instructions for publishing the FluentXmlWriter package t
    - Go to your account settings
    - Navigate to "API Keys"
    - Click "Create" and select appropriate permissions (at minimum: Push new packages and package versions)
-   - Copy the generated API key (you won't be able to see it again)
+   - Copy the generated API key (store it securely as you'll need it for publishing)
 
 3. **.NET SDK**: Ensure you have .NET SDK 8.0 or later installed.
 
@@ -59,8 +59,6 @@ Follow [Semantic Versioning](https://semver.org/) guidelines:
    ```
 
    Replace `1.0.0` with your actual version number. The API key set in step 1 will be used automatically.
-   
-   **Tip**: You can also use a wildcard pattern like `FluentXmlWriter.*.nupkg` if you have only one package file in the directory.
 
 ### Option 2: Using NuGet.org Web Interface
 
