@@ -231,4 +231,43 @@ public class StreamBasedTests
 
 		Assert.ThrowsException<InvalidOperationException>(() => writer.Done());
 	}
+
+	[TestMethod]
+	public void TestStreamBasedWithTextWriter_DoesNotDisposeTextWriter()
+	{
+		var stringWriter = new StringWriter();
+		
+		FluentXmlWriter.Start(stringWriter, "top", FormattingOptions.Default)
+			.Complex("child").Text("value").EndElem()
+			.Done();
+
+		// Should still be able to use the StringWriter after Done()
+		stringWriter.Write(" extra");
+		var result = stringWriter.ToString();
+		Assert.IsTrue(result.Contains("extra"));
+		
+		stringWriter.Dispose();
+	}
+
+	[TestMethod]
+	public void TestStreamBasedWithStream_DisposesStreamWriter()
+	{
+		var tempFile = Path.GetTempFileName();
+		try
+		{
+			var fileStream = File.Create(tempFile);
+			
+			FluentXmlWriter.Start(fileStream, "root", FormattingOptions.Default)
+				.Complex("child").Text("value").EndElem()
+				.Done();
+
+			// The fileStream should be closed now (through the disposed StreamWriter)
+			// Attempting to write should throw
+			Assert.ThrowsException<ObjectDisposedException>(() => fileStream.WriteByte(0));
+		}
+		finally
+		{
+			File.Delete(tempFile);
+		}
+	}
 }

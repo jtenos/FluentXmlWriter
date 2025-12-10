@@ -185,7 +185,13 @@ partial class FluentXmlWriter
 		_xmlWriter.WriteEndElement(); // Top-level element
 		_xmlWriter.Flush();
 		_textWriter.Flush();
-		_textWriter.Dispose();
+		
+		// Only dispose the TextWriter if we created it (from a Stream)
+		if (_ownsTextWriter)
+		{
+			_textWriter.Dispose();
+		}
+		
 		_isDone = true;
 	}
 }
