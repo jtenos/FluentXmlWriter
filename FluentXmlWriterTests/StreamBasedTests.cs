@@ -235,7 +235,7 @@ public class StreamBasedTests
 	[TestMethod]
 	public void TestStreamBasedWithTextWriter_DoesNotDisposeTextWriter()
 	{
-		var stringWriter = new StringWriter();
+		using var stringWriter = new StringWriter();
 		
 		FluentXmlWriter.Start(stringWriter, "top", FormattingOptions.Default)
 			.Complex("child").Text("value").EndElem()
@@ -245,8 +245,6 @@ public class StreamBasedTests
 		stringWriter.Write(" extra");
 		var result = stringWriter.ToString();
 		Assert.IsTrue(result.Contains("extra"));
-		
-		stringWriter.Dispose();
 	}
 
 	[TestMethod]
