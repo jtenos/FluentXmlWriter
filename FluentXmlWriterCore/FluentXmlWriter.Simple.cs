@@ -176,17 +176,21 @@ partial class FluentXmlWriter
 
 	void IFluentXmlWriterSimple.Done()
 	{
-		if (_isStreamMode)
-		{
-			_xmlWriter.WriteEndElement(); // ends the simple element
-			_xmlWriter.WriteEndElement(); // Top-level element
-			_xmlWriter.Flush();
-			_textWriter.Flush();
-			_textWriter.Dispose();
-		}
-		else
+		if (!_isStreamMode)
 		{
 			throw new InvalidOperationException("Done() can only be called when using stream-based mode. Use OutputToString() or OutputToFile() instead.");
 		}
+		
+		if (_isDone)
+		{
+			throw new InvalidOperationException("Done() has already been called on this FluentXmlWriter instance.");
+		}
+		
+		_xmlWriter.WriteEndElement(); // ends the simple element
+		_xmlWriter.WriteEndElement(); // Top-level element
+		_xmlWriter.Flush();
+		_textWriter.Flush();
+		_textWriter.Dispose();
+		_isDone = true;
 	}
 }

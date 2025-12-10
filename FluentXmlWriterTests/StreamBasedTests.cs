@@ -11,8 +11,7 @@ public class StreamBasedTests
 	{
 		using var stringWriter = new StringWriter();
 		
-		FluentXmlWriter.Start(stringWriter, FormattingOptions.Default)
-			.Complex("top")
+		FluentXmlWriter.Start(stringWriter, "top", FormattingOptions.Default)
 			.ManySimple(
 				SimpleElement.Create("a").Attr("id", "1"),
 				SimpleElement.Create("b").Attr("id", "2")
@@ -32,8 +31,7 @@ public class StreamBasedTests
 			.WithTabs()
 			.WithNewLine(Environment.NewLine);
 		
-		FluentXmlWriter.Start(stringWriter, options)
-			.Complex("top")
+		FluentXmlWriter.Start(stringWriter, "top", options)
 			.ManySimple(
 				SimpleElement.Create("a").Attr("id", "1"),
 				SimpleElement.Create("b").Attr("id", "2")
@@ -56,8 +54,7 @@ public class StreamBasedTests
 		{
 			using (var fileStream = File.Create(tempFile))
 			{
-				FluentXmlWriter.Start(fileStream, FormattingOptions.Default)
-					.Complex("root")
+				FluentXmlWriter.Start(fileStream, "root", FormattingOptions.Default)
 					.Complex("child").Text("value").EndElem()
 					.Done();
 			}
@@ -84,8 +81,7 @@ public class StreamBasedTests
 			
 			using (var fileStream = File.Create(tempFile))
 			{
-				FluentXmlWriter.Start(fileStream, options)
-					.Complex("root")
+				FluentXmlWriter.Start(fileStream, "root", options)
 					.Complex("child").Text("value").EndElem()
 					.Done();
 			}
@@ -108,8 +104,7 @@ public class StreamBasedTests
 		{
 			using (var fileStream = File.Create(tempFile))
 			{
-				FluentXmlWriter.Start(fileStream, FormattingOptions.Default, Encoding.UTF8)
-					.Complex("root")
+				FluentXmlWriter.Start(fileStream, "root", FormattingOptions.Default, Encoding.UTF8)
 					.Complex("child").Text("Hello 世界").EndElem()
 					.Done();
 			}
@@ -129,8 +124,7 @@ public class StreamBasedTests
 	{
 		using var stringWriter = new StringWriter();
 		
-		var writer = FluentXmlWriter.Start(stringWriter, FormattingOptions.Default)
-			.Complex("top");
+		var writer = FluentXmlWriter.Start(stringWriter, "top", FormattingOptions.Default);
 
 		Assert.ThrowsException<InvalidOperationException>(() => writer.OutputToString());
 	}
@@ -140,8 +134,7 @@ public class StreamBasedTests
 	{
 		using var stringWriter = new StringWriter();
 		
-		var writer = FluentXmlWriter.Start(stringWriter, FormattingOptions.Default)
-			.Complex("top");
+		var writer = FluentXmlWriter.Start(stringWriter, "top", FormattingOptions.Default);
 
 		Assert.ThrowsException<InvalidOperationException>(() => writer.OutputToFile("test.xml"));
 	}
@@ -213,8 +206,7 @@ public class StreamBasedTests
 			.WithSpaces(2)
 			.WithNewLine("\n");
 		
-		FluentXmlWriter.Start(stringWriter, options)
-			.Complex("response")
+		FluentXmlWriter.Start(stringWriter, "response", options)
 			.Attr("status", "success")
 			.Complex("data")
 				.Complex("user")
@@ -227,5 +219,16 @@ public class StreamBasedTests
 		var xml = stringWriter.ToString();
 		const string expected = "<response status=\"success\">\n  <data>\n    <user>\n      <id>123</id>\n      <name>John</name>\n    </user>\n  </data>\n</response>";
 		Assert.AreEqual(expected, xml);
+	}
+
+	[TestMethod]
+	public void TestStreamMode_CannotCallDoneTwice()
+	{
+		using var stringWriter = new StringWriter();
+		
+		var writer = FluentXmlWriter.Start(stringWriter, "top", FormattingOptions.Default);
+		writer.Done();
+
+		Assert.ThrowsException<InvalidOperationException>(() => writer.Done());
 	}
 }

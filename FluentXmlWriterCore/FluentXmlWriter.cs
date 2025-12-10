@@ -10,6 +10,7 @@ public partial class FluentXmlWriter
 	private readonly TextWriter _textWriter;
 	private readonly XmlWriter _xmlWriter;
 	private readonly bool _isStreamMode;
+	private bool _isDone;
 
 	private FluentXmlWriter(FormattingOptions? options)
 	{
@@ -17,6 +18,7 @@ public partial class FluentXmlWriter
 		_textWriter = new StringWriter(_stringBuilder);
 		_xmlWriter = new CustomXmlWriter(_textWriter, options);
 		_isStreamMode = false;
+		_isDone = false;
 	}
 
 	private FluentXmlWriter(FluentXmlWriter writer)
@@ -25,6 +27,7 @@ public partial class FluentXmlWriter
 		_textWriter = writer._textWriter;
 		_xmlWriter = writer._xmlWriter;
 		_isStreamMode = writer._isStreamMode;
+		_isDone = writer._isDone;
 	}
 
 	private FluentXmlWriter(TextWriter textWriter, FormattingOptions? options, bool isStreamMode)
@@ -33,6 +36,7 @@ public partial class FluentXmlWriter
 		_textWriter = textWriter;
 		_xmlWriter = new CustomXmlWriter(_textWriter, options);
 		_isStreamMode = isStreamMode;
+		_isDone = false;
 	}
 
 	public static IFluentXmlWriterComplex Start(string topLevelElement)
@@ -56,17 +60,17 @@ public partial class FluentXmlWriter
 		return fluentXmlWriter.Complex(topLevelElement);
 	}
 
-	public static IFluentXmlWriterComplex Start(TextWriter textWriter, FormattingOptions? options = null)
+	public static IFluentXmlWriterComplex Start(TextWriter textWriter, string topLevelElement, FormattingOptions? options = null)
 	{
 		IFluentXmlWriterComplex fluentXmlWriter = new FluentXmlWriter(textWriter, options, true);
-		return fluentXmlWriter;
+		return fluentXmlWriter.Complex(topLevelElement);
 	}
 
-	public static IFluentXmlWriterComplex Start(Stream stream, FormattingOptions? options = null, Encoding? encoding = null)
+	public static IFluentXmlWriterComplex Start(Stream stream, string topLevelElement, FormattingOptions? options = null, Encoding? encoding = null)
 	{
 		var streamWriter = new StreamWriter(stream, encoding ?? Encoding.UTF8);
 		IFluentXmlWriterComplex fluentXmlWriter = new FluentXmlWriter(streamWriter, options, true);
-		return fluentXmlWriter;
+		return fluentXmlWriter.Complex(topLevelElement);
 	}
 
 	public override string ToString() => _stringBuilder?.ToString() ?? string.Empty;
