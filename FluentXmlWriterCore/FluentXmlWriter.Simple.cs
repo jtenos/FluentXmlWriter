@@ -69,23 +69,35 @@ partial class FluentXmlWriter
 
 	void IFluentXmlWriterSimple.OutputToString(Action<string> action)
 	{
+		if (_isStreamMode)
+		{
+			throw new InvalidOperationException("OutputToString() cannot be called when using stream-based mode. Use Done() instead.");
+		}
 		_xmlWriter.WriteEndElement(); // ends the simple element
 		_xmlWriter.WriteEndElement(); // Top-level element
-		action(_stringBuilder.ToString());
+		action(_stringBuilder!.ToString());
 	}
 
 	string IFluentXmlWriterSimple.OutputToString()
 	{
+		if (_isStreamMode)
+		{
+			throw new InvalidOperationException("OutputToString() cannot be called when using stream-based mode. Use Done() instead.");
+		}
 		_xmlWriter.WriteEndElement(); // ends the simple element
 		_xmlWriter.WriteEndElement(); // Top-level element
-		return _stringBuilder.ToString();
+		return _stringBuilder!.ToString();
 	}
 
 	string IFluentXmlWriterSimple.OutputToString(bool indented)
 	{
+		if (_isStreamMode)
+		{
+			throw new InvalidOperationException("OutputToString() cannot be called when using stream-based mode. Use Done() instead.");
+		}
 		_xmlWriter.WriteEndElement(); // ends the simple element
 		_xmlWriter.WriteEndElement(); // Top-level element
-		var xml = _stringBuilder.ToString();
+		var xml = _stringBuilder!.ToString();
 		
 		if (!indented)
 		{
@@ -100,9 +112,13 @@ partial class FluentXmlWriter
 
 	string IFluentXmlWriterSimple.OutputToString(FormattingOptions options)
 	{
+		if (_isStreamMode)
+		{
+			throw new InvalidOperationException("OutputToString() cannot be called when using stream-based mode. Use Done() instead.");
+		}
 		_xmlWriter.WriteEndElement(); // ends the simple element
 		_xmlWriter.WriteEndElement(); // Top-level element
-		var xml = _stringBuilder.ToString();
+		var xml = _stringBuilder!.ToString();
 		
 		if (!options.Indent)
 		{
@@ -114,20 +130,63 @@ partial class FluentXmlWriter
 
 	void IFluentXmlWriterSimple.OutputToFile(string fileName)
 	{
+		if (_isStreamMode)
+		{
+			throw new InvalidOperationException("OutputToFile() cannot be called when using stream-based mode. Use Done() instead.");
+		}
 		_xmlWriter.WriteEndElement(); // ends the simple element
 		_xmlWriter.WriteEndElement(); // Top-level element
-		File.WriteAllText(fileName, _stringBuilder.ToString());
+		File.WriteAllText(fileName, _stringBuilder!.ToString());
 	}
 
 	void IFluentXmlWriterSimple.OutputToFile(string fileName, bool indented)
 	{
+		if (_isStreamMode)
+		{
+			throw new InvalidOperationException("OutputToFile() cannot be called when using stream-based mode. Use Done() instead.");
+		}
 		var output = ((IFluentXmlWriterSimple)this).OutputToString(indented);
 		File.WriteAllText(fileName, output);
 	}
 
 	void IFluentXmlWriterSimple.OutputToFile(string fileName, FormattingOptions options)
 	{
+		if (_isStreamMode)
+		{
+			throw new InvalidOperationException("OutputToFile() cannot be called when using stream-based mode. Use Done() instead.");
+		}
 		var output = ((IFluentXmlWriterSimple)this).OutputToString(options);
 		File.WriteAllText(fileName, output);
+	}
+
+	string IFluentXmlWriterSimple.WriteToString()
+	{
+		return ((IFluentXmlWriterSimple)this).OutputToString();
+	}
+
+	string IFluentXmlWriterSimple.WriteToString(bool indented)
+	{
+		return ((IFluentXmlWriterSimple)this).OutputToString(indented);
+	}
+
+	string IFluentXmlWriterSimple.WriteToString(FormattingOptions options)
+	{
+		return ((IFluentXmlWriterSimple)this).OutputToString(options);
+	}
+
+	void IFluentXmlWriterSimple.Done()
+	{
+		if (_isStreamMode)
+		{
+			_xmlWriter.WriteEndElement(); // ends the simple element
+			_xmlWriter.WriteEndElement(); // Top-level element
+			_xmlWriter.Flush();
+			_textWriter.Flush();
+			_textWriter.Dispose();
+		}
+		else
+		{
+			throw new InvalidOperationException("Done() can only be called when using stream-based mode. Use OutputToString() or OutputToFile() instead.");
+		}
 	}
 }

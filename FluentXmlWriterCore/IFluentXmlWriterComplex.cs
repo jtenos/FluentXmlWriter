@@ -18,5 +18,9 @@ public interface IFluentXmlWriterComplex
 	void OutputToFile(string fileName);
 	void OutputToFile(string fileName, bool indented);
 	void OutputToFile(string fileName, FormattingOptions options);
+	string WriteToString();
+	string WriteToString(bool indented);
+	string WriteToString(FormattingOptions options);
+	void Done();
 }
 // TODO: Conditionals (ex: SimpleIf(someCond, ...))

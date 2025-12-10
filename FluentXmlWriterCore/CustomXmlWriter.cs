@@ -5,8 +5,8 @@ namespace FluentXmlWriterCore;
 public class CustomXmlWriter
 	: XmlTextWriter
 {
-	public CustomXmlWriter(StringWriter sw, FormattingOptions? options = null)
-		: base(sw)
+	public CustomXmlWriter(TextWriter writer, FormattingOptions? options = null)
+		: base(writer)
 	{
 		var opts = options ?? FormattingOptions.Default;
 		

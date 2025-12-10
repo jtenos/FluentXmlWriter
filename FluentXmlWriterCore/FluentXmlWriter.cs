@@ -6,35 +6,44 @@ namespace FluentXmlWriterCore;
 public partial class FluentXmlWriter
 	: IDisposable, IFluentXmlWriterComplex, IFluentXmlWriterSimple
 {
-	private readonly StringBuilder _stringBuilder;
-	private readonly StringWriter _stringWriter;
+	private readonly StringBuilder? _stringBuilder;
+	private readonly TextWriter _textWriter;
 	private readonly XmlWriter _xmlWriter;
+	private readonly bool _isStreamMode;
 
-	private FluentXmlWriter(FluentXmlWriter? writer, FormattingOptions? options = null)
+	private FluentXmlWriter(FormattingOptions? options)
 	{
-		if (writer is null)
-		{
-			_stringBuilder = new StringBuilder();
-			_stringWriter = new StringWriter(_stringBuilder);
-			_xmlWriter = new CustomXmlWriter(_stringWriter, options);
-		}
-		else
-		{
-			_stringBuilder = writer._stringBuilder;
-			_stringWriter = writer._stringWriter;
-			_xmlWriter = writer._xmlWriter;
-		}
+		_stringBuilder = new StringBuilder();
+		_textWriter = new StringWriter(_stringBuilder);
+		_xmlWriter = new CustomXmlWriter(_textWriter, options);
+		_isStreamMode = false;
+	}
+
+	private FluentXmlWriter(FluentXmlWriter writer)
+	{
+		_stringBuilder = writer._stringBuilder;
+		_textWriter = writer._textWriter;
+		_xmlWriter = writer._xmlWriter;
+		_isStreamMode = writer._isStreamMode;
+	}
+
+	private FluentXmlWriter(TextWriter textWriter, FormattingOptions? options, bool isStreamMode)
+	{
+		_stringBuilder = null;
+		_textWriter = textWriter;
+		_xmlWriter = new CustomXmlWriter(_textWriter, options);
+		_isStreamMode = isStreamMode;
 	}
 
 	public static IFluentXmlWriterComplex Start(string topLevelElement)
 	{
-		IFluentXmlWriterComplex fluentXmlWriter = new FluentXmlWriter(null);
+		IFluentXmlWriterComplex fluentXmlWriter = new FluentXmlWriter((FormattingOptions?)null);
 		return fluentXmlWriter.Complex(topLevelElement);
 	}
 
 	public static IFluentXmlWriterComplex Start(string topLevelElement, FormattingOptions options)
 	{
-		IFluentXmlWriterComplex fluentXmlWriter = new FluentXmlWriter(null, options);
+		IFluentXmlWriterComplex fluentXmlWriter = new FluentXmlWriter(options);
 		return fluentXmlWriter.Complex(topLevelElement);
 	}
 
@@ -43,11 +52,24 @@ public partial class FluentXmlWriter
 		var options = indented 
 			? FormattingOptions.Default.WithTabs().WithNewLine(Environment.NewLine)
 			: FormattingOptions.Default;
-		IFluentXmlWriterComplex fluentXmlWriter = new FluentXmlWriter(null, options);
+		IFluentXmlWriterComplex fluentXmlWriter = new FluentXmlWriter(options);
 		return fluentXmlWriter.Complex(topLevelElement);
 	}
 
-	public override string ToString() => _stringBuilder.ToString();
+	public static IFluentXmlWriterComplex Start(TextWriter textWriter, FormattingOptions? options = null)
+	{
+		IFluentXmlWriterComplex fluentXmlWriter = new FluentXmlWriter(textWriter, options, true);
+		return fluentXmlWriter;
+	}
+
+	public static IFluentXmlWriterComplex Start(Stream stream, FormattingOptions? options = null, Encoding? encoding = null)
+	{
+		var streamWriter = new StreamWriter(stream, encoding ?? Encoding.UTF8);
+		IFluentXmlWriterComplex fluentXmlWriter = new FluentXmlWriter(streamWriter, options, true);
+		return fluentXmlWriter;
+	}
+
+	public override string ToString() => _stringBuilder?.ToString() ?? string.Empty;
 
 	void IDisposable.Dispose() => ((IDisposable)_xmlWriter).Dispose();
 
