@@ -12,6 +12,11 @@ public interface IFluentXmlWriterComplex
 	IFluentXmlWriterComplex Comment(string comment);
 	IFluentXmlWriterComplex EndElem();
 	void OutputToString(Action<string> action);
+	string OutputToString();
+	string OutputToString(bool indented);
+	string OutputToString(FormattingOptions options);
 	void OutputToFile(string fileName);
+	void OutputToFile(string fileName, bool indented);
+	void OutputToFile(string fileName, FormattingOptions options);
 }
 // TODO: Conditionals (ex: SimpleIf(someCond, ...))
