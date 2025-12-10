@@ -23,16 +23,6 @@ public partial class FluentXmlWriter
 		_isDone = false;
 	}
 
-	private FluentXmlWriter(FluentXmlWriter writer)
-	{
-		_stringBuilder = writer._stringBuilder;
-		_textWriter = writer._textWriter;
-		_xmlWriter = writer._xmlWriter;
-		_isStreamMode = writer._isStreamMode;
-		_ownsTextWriter = writer._ownsTextWriter;
-		_isDone = writer._isDone;
-	}
-
 	private FluentXmlWriter(TextWriter textWriter, FormattingOptions? options, bool isStreamMode, bool ownsTextWriter)
 	{
 		_stringBuilder = null;
